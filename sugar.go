@@ -1,10 +1,12 @@
 package sugar
 
+// Sugar is a struct that holds the value and error channels
 type Sugar[T any] struct {
 	ValueChan chan T
 	ErrChan   chan error
 }
 
+// Async provides a way to run a function asynchronously in a separate goroutine
 func Async[K any, V any](f func(...K) (V, error), args ...K) Sugar[V] {
 	c := make(chan V)
 	e := make(chan error)
@@ -14,9 +16,10 @@ func Async[K any, V any](f func(...K) (V, error), args ...K) Sugar[V] {
 		e <- err
 
 	}()
-	return Sugar[V]{ValueChan: c, ErrChan: nil}
+	return Sugar[V]{ValueChan: c, ErrChan: e}
 }
 
+// Await provides a way to wait for the result of an asynchronous function
 func Await[K any](s Sugar[K]) (K, error) {
 	select {
 	case val := <-s.ValueChan:
@@ -26,6 +29,7 @@ func Await[K any](s Sugar[K]) (K, error) {
 	}
 }
 
+// AwaitAll provides a way to wait for the results of multiple asynchronous functions
 func AwaitAll[K any](s ...Sugar[K]) ([]K, []error) {
 	var vals []K
 	var errs []error

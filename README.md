@@ -1,7 +1,13 @@
 # Sugar
-Sugar is a go library that tries to provide js like async/await construct using goroutines and channel
+### Overview
+Sugar is a go library that tries to provide js like `async/await` construct using goroutine and channel
 
-# Usage example
+### Installing
+```cURL
+go get -u github.com/shafn098/sugar@latest
+```
+
+### Usage
 ```go
 package main
 
@@ -11,11 +17,13 @@ import (
 	"github.com/shafin098/sugar"
 )
 
+// WaitTwoSecondsAndSum simulates long function call
 func WaitTwoSecondsAndSum(nums ...int) (int, error) {
 	time.Sleep(2 * time.Second)
 	return nums[0] + nums[1], nil
 }
 
+// WaitFourSecondsAndSum simulates long function call
 func WaitFourSecondsAndSum(nums ...int) (int, error) {
 	time.Sleep(4 * time.Second)
 	return nums[0] + nums[1], nil
