@@ -22,23 +22,33 @@ func WaitFourSecondsAndSum(nums ...int) (int, error) {
 }
 
 func main() {
-	waitSumOne := sugar.Async(WaitTwoSecondsAndSum, 2, 3)
-	fmt.Println("summing 2,3 and waiting for 2 seconds")
+    // sum one will be running in backgroung in a separate goroutine without blocking until await is called
+    waitSumOne := sugar.Async(WaitTwoSecondsAndSum, 2, 3)
+    fmt.Println("summing 2,3 and waiting for 2 seconds")
 
-	waitSumTwo, err := sugar.Async(WaitTwoSecondsAndSum, 3, 3)
-	fmt.Println("summing 3,3 and waiting for 4 seconds")
+    // sum two will be running in backgroung in a separate goroutine without blocking until await is called
+    waitSumTwo, err := sugar.Async(WaitTwoSecondsAndSum, 3, 3)
+    fmt.Println("summing 3,3 and waiting for 4 seconds")
 
-	sumOne, err := sugar.Await(waitSumOne)
-	if err != nil {
-		fmt.Errorf(err)
-	}
-	fmt.Println("sumOne: ", sumOne)
+    // we are supposed to do other work here
+    // -------------------------------------
+    // -------------------------------------
+    // -------------------------------------
+    // assuming other works are done
 
-	sumTwo, err := sugar.Await(waitSumTwo)
-	if err != nil {
-		fmt.Errorf(err)
-	}
-	fmt.Println("sumTwo: ", sumTwo)
+    // blocking main goroutine and fetching first sum, if it has been more than 2 seconds (other work took 2 seconds) await call will return instantly with sum
+    sumOne, err := sugar.Await(waitSumOne)
+    if err != nil {
+        fmt.Errorf(err)
+    }
+    fmt.Println("sumOne: ", sumOne)
+
+
+    // blocking main goroutine and fetching second sum, if it has been more than 4 seconds (other work took 4 seconds) await call will return instantly with sum
+    sumTwo, err := sugar.Await(waitSumTwo)
+    if err != nil {
+        fmt.Errorf(err)
+    }
+    fmt.Println("sumTwo: ", sumTwo)
 }
-
 ```
