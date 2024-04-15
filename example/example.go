@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 
-	"github.com/shafin098/sugar"
+	sugar "github.com/shafin098/sugar"
 )
 
 func WaitTwoSecondsAndSum(nums ...int) (int, error) {
@@ -21,18 +22,18 @@ func main() {
 	waitSumOne := sugar.Async(WaitTwoSecondsAndSum, 2, 3)
 	fmt.Println("summing 2,3 and waiting for 2 seconds")
 
-	waitSumTwo, err := sugar.Async(WaitTwoSecondsAndSum, 3, 3)
+	waitSumTwo := sugar.Async(WaitTwoSecondsAndSum, 3, 3)
 	fmt.Println("summing 3,3 and waiting for 4 seconds")
 
 	sumOne, err := sugar.Await(waitSumOne)
 	if err != nil {
-		fmt.Errorf(err)
+		fmt.Fprintf(os.Stderr, "error: %s", err)
 	}
 	fmt.Println("sumOne: ", sumOne)
 
 	sumTwo, err := sugar.Await(waitSumTwo)
 	if err != nil {
-		fmt.Errorf(err)
+		fmt.Fprintf(os.Stderr, "error: %s", err)
 	}
 	fmt.Println("sumTwo: ", sumTwo)
 }
