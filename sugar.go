@@ -12,9 +12,11 @@ func Async[K any, V any](f func(...K) (V, error), args ...K) Sugar[V] {
 	e := make(chan error)
 	go func() {
 		val, err := f(args...)
-		c <- val
-		e <- err
-
+		if err != nil {
+			e <- err
+		} else {
+			c <- val
+		}
 	}()
 	return Sugar[V]{ValueChan: c, ErrChan: e}
 }
